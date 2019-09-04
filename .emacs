@@ -16,7 +16,22 @@ There are two things you can do about this warning:
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
 (package-initialize)
+; fetch the list of packages available 
+(unless package-archive-contents
+  (package-refresh-contents))
+(defvar my-packages
+  '(web-mode golden-ratio-scroll-screen company hack-mode mmm-mode nlinum)
+  "A list of packages to ensure are installed at launch.")
+; install the missing packages
+(dolist (package my-packages)
+  (unless (package-installed-p package)
+    (package-install package)))
 
 (add-to-list 'auto-mode-alist '("\\.html\\'" . web-mode))
 (require 'web-mode)
@@ -35,11 +50,6 @@ There are two things you can do about this warning:
 
 ;; enabling line numbers by defaut
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
 ;; Preset `nlinum-format' for minimum width.
 (defun my-nlinum-mode-hook ()
   (when nlinum-mode
@@ -101,8 +111,8 @@ There are two things you can do about this warning:
 
 ;;hack
 (require 'hack-mode)
-(setq hack-for-hiphop-root "~/www")
-(load "/home/engshare/tools/hack-for-hiphop")
+;;(setq hack-for-hiphop-root "~/www");;fb commented out
+;;(load "/home/engshare/tools/hack-for-hiphop")
 (add-to-list 'auto-mode-alist '("\\.php\\'" . hack-mode))
 
 ;; python+ sql = mmm
@@ -120,7 +130,7 @@ There are two things you can do about this warning:
 
 
 ;; hack debug (borked)
-(load-library "/home/jschumann/fbsource/fbcode/emacs_config/emacs-packages/hphpd.el")
+;;(load-library "/home/jschumann/fbsource/fbcode/emacs_config/emacs-packages/hphpd.el")
 
 (defun hphpd-localhost ()
   "Start HipHop Debugger against localhost"
