@@ -26,7 +26,7 @@ There are two things you can do about this warning:
 (unless package-archive-contents
   (package-refresh-contents))
 (defvar my-packages
-  '(web-mode golden-ratio-scroll-screen company hack-mode mmm-mode nlinum)
+  '(web-mode golden-ratio-scroll-screen company hack-mode mmm-mode nlinum clang-format)
   "A list of packages to ensure are installed at launch.")
 ; install the missing packages
 (dolist (package my-packages)
@@ -78,7 +78,7 @@ There are two things you can do about this warning:
     ("8de9f0d0e8d041ac7e7fc9d7db2aff119259eea297ccc247e81470851df32602" default)))
  '(package-selected-packages
    (quote
-    (json-reformatter-jq json-reformat hack-mode mmm-mode multiple-cursors hack-time-mode company php-mode golden-ratio-scroll-screen nlinum go-mode yaml-mode web-mode python-django yasnippet))))
+    (clang-format json-reformatter-jq json-reformat hack-mode mmm-mode multiple-cursors hack-time-mode company php-mode golden-ratio-scroll-screen nlinum go-mode yaml-mode web-mode python-django yasnippet))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -104,7 +104,7 @@ There are two things you can do about this warning:
 
 ;; company
 (require 'company)
-(global-set-key (kbd "M-TAB") 'company-complete)
+(global-set-key (kbd "M-q") 'company-complete)
 (setq company-idle-delay  nil) ;; removing typeahead display
 (add-hook 'after-init-hook 'global-company-mode) ;; default on
 
@@ -142,7 +142,9 @@ There are two things you can do about this warning:
   (interactive)
   (hphpd "hphpd -f ~/www/scripts/insights/insights_generate_metrics.php"))
 
-
+;; clang-format
+(require 'clang-format)
+(global-set-key (kbd "C-c u") 'clang-format-buffer)
 ;; save sessions
 (desktop-save-mode 1)
 (put 'upcase-region 'disabled nil)
