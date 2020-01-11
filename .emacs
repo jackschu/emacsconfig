@@ -22,11 +22,15 @@ There are two things you can do about this warning:
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 (package-initialize)
+(require 'ein)
+(require 'ein-notebook)
+(require 'ein-subpackages)
+
 ; fetch the list of packages available 
 (unless package-archive-contents
   (package-refresh-contents))
 (defvar my-packages
-  '(web-mode golden-ratio-scroll-screen company hack-mode mmm-mode nlinum clang-format)
+  '(web-mode golden-ratio-scroll-screen company hack-mode mmm-mode nlinum clang-format prettier-js)
   "A list of packages to ensure are installed at launch.")
 ; install the missing packages
 (dolist (package my-packages)
@@ -39,13 +43,17 @@ There are two things you can do about this warning:
 
 (setq web-mode-engines-alist
       '(("django" . "\\.html\\'")))
-(add-to-list 'auto-mode-alist '("/data/users/jschumann/www-hg/html/intern/js/.*\\.js[x]?\\'" . web-mode))
+;;(add-to-list 'auto-mode-alist '("/data/users/jschumann/www-hg/html/intern/js/.*\\.js[x]?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.js[x]?\\'" . web-mode))
 (defun pk-web-mode-hook ()
   "Hooks for Web mode."
   (set-face-attribute 'web-mode-html-tag-bracket-face nil :foreground "White")
   (set-face-attribute 'web-mode-html-tag-face nil :foreground "Yellow")
   )
 (add-hook 'web-mode-hook  'pk-web-mode-hook)
+;; tab spaces war
+(setq-default tab-width 4)
+
 
 
 ;; enabling line numbers by defaut
@@ -75,10 +83,10 @@ There are two things you can do about this warning:
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("8de9f0d0e8d041ac7e7fc9d7db2aff119259eea297ccc247e81470851df32602" default)))
+	("8de9f0d0e8d041ac7e7fc9d7db2aff119259eea297ccc247e81470851df32602" default)))
  '(package-selected-packages
    (quote
-    (clang-format json-reformatter-jq json-reformat hack-mode mmm-mode multiple-cursors hack-time-mode company php-mode golden-ratio-scroll-screen nlinum go-mode yaml-mode web-mode python-django yasnippet))))
+	(protobuf-mode gnu-elpa-keyring-update ein python-black blacken sml-mode clang-format json-reformatter-jq json-reformat hack-mode mmm-mode multiple-cursors hack-time-mode company php-mode golden-ratio-scroll-screen nlinum go-mode yaml-mode web-mode python-django yasnippet))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -127,7 +135,8 @@ There are two things you can do about this warning:
     :back "\\(\"\"\"\\|'''\\)\\( \\|\t\\|\n\\)*\\# /SQL")))
 
 (mmm-add-mode-ext-class 'python-mode "*.py" 'python-sql)
-
+;; python interpreter
+(setq python-shell-interpreter "python3")
 
 ;; hack debug (borked)
 ;;(load-library "/home/jschumann/fbsource/fbcode/emacs_config/emacs-packages/hphpd.el")
@@ -145,6 +154,19 @@ There are two things you can do about this warning:
 ;; clang-format
 (require 'clang-format)
 (global-set-key (kbd "C-c u") 'clang-format-buffer)
+
+;; prettier
+(require 'prettier-js)
+(defun enable-prettier-mode (my-pair)
+  "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
+  (if (buffer-file-name)
+      (if (string-match (car my-pair) buffer-file-name)
+		  (funcall (cdr my-pair)))))
+
+(add-hook 'web-mode-hook #'(lambda ()
+                            (enable-prettier-mode
+                             '("\\.jsx?\\'" . prettier-js-mode))))
 ;; save sessions
 (desktop-save-mode 1)
 (put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
