@@ -30,7 +30,8 @@ There are two things you can do about this warning:
 (unless package-archive-contents
   (package-refresh-contents))
 (defvar my-packages
-  '(web-mode golden-ratio-scroll-screen company hack-mode mmm-mode nlinum clang-format prettier-js)
+  '(web-mode golden-ratio-scroll-screen company hack-mode mmm-mode nlinum clang-format prettier-js go-mode)
+
   "A list of packages to ensure are installed at launch.")
 ; install the missing packages
 (dolist (package my-packages)
