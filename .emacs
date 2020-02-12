@@ -112,7 +112,6 @@ There are two things you can do about this warning:
 
 ;; company
 (require 'company)
-(global-set-key (kbd "M-q") 'company-complete)
 (setq company-idle-delay  nil) ;; removing typeahead display
 (add-hook 'after-init-hook 'global-company-mode) ;; default on
 
@@ -166,7 +165,29 @@ There are two things you can do about this warning:
 (add-hook 'web-mode-hook #'(lambda ()
                             (enable-prettier-mode
                              '("\\.jsx?\\'" . prettier-js-mode))))
+;; my keybindings
+(defvar my-keys-minor-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "M-q") 'company-complete)
+    map)
+  "my-keys-minor-mode keymap.")
+
+(define-minor-mode my-keys-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  :init-value t
+  :lighter " my-keys")
+
+(my-keys-minor-mode 1)
+
 ;; save sessions
 (desktop-save-mode 1)
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+
+
+;; backup in one place. flat, no tree structure
+(setq backup-directory-alist '(("" . "~/.emacs.d/backup")))
+
+
+; roslaunch highlighting
+(add-to-list 'auto-mode-alist '("\\.launch$" . xml-mode))
