@@ -1,4 +1,3 @@
-
 ;; comment commands
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
@@ -75,7 +74,6 @@ There are two things you can do about this warning:
 ;;merge mode hook
 
 
-
 ;; adding themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 
@@ -97,12 +95,13 @@ There are two things you can do about this warning:
  '(gc-cons-threshold 100000000)
  '(helm-ag-base-command
    "ag --no-color --nogroup -W 150 --ignore=output/ --ignore=*.orig --ignore=*.*#")
+ '(helm-locate-command "locate %s -e -A --regex %s")
  '(indent-tabs-mode nil)
  '(irony-server-install-prefix "/run/current-system/sw")
  '(make-backup-files nil)
  '(mode-require-final-newline nil)
  '(package-selected-packages
-   '(flycheck-irony company-irony irony no-littering xclip rust-mode sphinx-mode company-terraform terraform-mode ws-butler cmake-ide zzz-to-char tide rainbow-delimiters flycheck-rtags rtags flycheck-clangcheck flycheck lua-mode helm-ag nix-mode lsp-mode protobuf-mode gnu-elpa-keyring-update ein python-black blacken sml-mode clang-format json-reformatter-jq json-reformat mmm-mode multiple-cursors hack-time-mode company php-mode golden-ratio-scroll-screen nlinum go-mode yaml-mode web-mode python-django yasnippet))
+   '(helm-projectile projectile flycheck-irony company-irony irony no-littering xclip rust-mode sphinx-mode company-terraform terraform-mode ws-butler cmake-ide zzz-to-char tide rainbow-delimiters flycheck-rtags rtags flycheck-clangcheck flycheck lua-mode helm-ag nix-mode lsp-mode protobuf-mode gnu-elpa-keyring-update ein python-black blacken sml-mode clang-format json-reformatter-jq json-reformat mmm-mode multiple-cursors hack-time-mode company php-mode golden-ratio-scroll-screen nlinum go-mode yaml-mode web-mode python-django yasnippet))
  '(prettier-js-args '("--tab-width" "4" "--print-width" "100" "--semi" "false"))
  '(prettier-js-command "~/.npm-packages/bin/prettier")
  '(tide-completion-fuzzy t)
@@ -205,12 +204,18 @@ There are two things you can do about this warning:
                             (enable-prettier-mode
                              '("\\.jsx?\\'" . prettier-js-mode))))
 
+;; projectile
+(require 'projectile)
+
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+(projectile-mode +1)
 
 ;; my keybindings
 (defvar my-keys-minor-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "M-q") 'company-complete)
-    (define-key map (kbd "C-x C-f") 'helm-locate)
+    (define-key map (kbd "C-x C-f") 'helm-projectile)
+    ;;(define-key map (kbd "C-x C-f") 'helm-locate)
     (define-key map (kbd "C-x c b") 'helm-bookmarks)
     (define-key map (kbd "C-x c k") 'helm-show-kill-ring)
     (define-key map (kbd "C-x c r") 'helm-resume)
@@ -475,3 +480,9 @@ There are two things you can do about this warning:
 
 ;; zzz-mode
 (global-set-key (kbd "M-z") #'zzz-to-char)
+
+;; rust
+(add-hook 'rust-mode-hook #'lsp)
+(add-hook 'rust-mode-hook
+	  (lambda () (setq indent-tabs-mode nil)))
+(setq rust-format-on-save t)
