@@ -95,13 +95,13 @@ There are two things you can do about this warning:
  '(gc-cons-threshold 100000000)
  '(helm-ag-base-command
    "ag --no-color --nogroup -W 150 --ignore=output/ --ignore=*.orig --ignore=*.*#")
- '(helm-locate-command "locate %s -e -A --regex %s")
+ '(helm-locate-command "locate %s -e -A --regex %s \"$(pwd)\"")
  '(indent-tabs-mode nil)
  '(irony-server-install-prefix "/run/current-system/sw")
  '(make-backup-files nil)
  '(mode-require-final-newline nil)
  '(package-selected-packages
-   '(helm-projectile projectile flycheck-irony company-irony irony no-littering xclip rust-mode sphinx-mode company-terraform terraform-mode ws-butler cmake-ide zzz-to-char tide rainbow-delimiters flycheck-rtags rtags flycheck-clangcheck flycheck lua-mode helm-ag nix-mode lsp-mode protobuf-mode gnu-elpa-keyring-update ein python-black blacken sml-mode clang-format json-reformatter-jq json-reformat mmm-mode multiple-cursors hack-time-mode company php-mode golden-ratio-scroll-screen nlinum go-mode yaml-mode web-mode python-django yasnippet))
+   '(flycheck-rust helm-projectile projectile flycheck-irony company-irony irony no-littering xclip rust-mode sphinx-mode company-terraform terraform-mode ws-butler cmake-ide zzz-to-char tide rainbow-delimiters flycheck-rtags rtags flycheck-clangcheck flycheck lua-mode helm-ag nix-mode lsp-mode protobuf-mode gnu-elpa-keyring-update ein python-black blacken sml-mode clang-format json-reformatter-jq json-reformat mmm-mode multiple-cursors hack-time-mode company php-mode golden-ratio-scroll-screen nlinum go-mode yaml-mode web-mode python-django yasnippet))
  '(prettier-js-args '("--tab-width" "4" "--print-width" "100" "--semi" "false"))
  '(prettier-js-command "~/.npm-packages/bin/prettier")
  '(tide-completion-fuzzy t)
@@ -111,7 +111,7 @@ There are two things you can do about this warning:
  '(tide-user-preferences
    '(:includeCompletionsForModuleExports t :includeCompletionsWithInsertText t :allowTextChangesInNewFiles t :generateReturnInDocTemplate t :noErrorTruncation t))
  '(vc-annotate-background-mode nil)
- '(warning-suppress-types '((auto-save))))
+ '(warning-suppress-types '((comp) (comp) (comp) (auto-save))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -210,6 +210,7 @@ There are two things you can do about this warning:
 (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 (projectile-mode +1)
 
+(global-unset-key (kbd "C-x l"))
 ;; my keybindings
 (defvar my-keys-minor-mode-map
   (let ((map (make-sparse-keymap)))
@@ -220,6 +221,8 @@ There are two things you can do about this warning:
     (define-key map (kbd "C-x c k") 'helm-show-kill-ring)
     (define-key map (kbd "C-x c r") 'helm-resume)
     (define-key map (kbd "C-x r l") 'helm-bookmarks)
+    (define-key map (kbd "C-x l r") 'lsp-rename)
+    (define-key map (kbd "C-x ;") 'comment-line)
     (define-key map (kbd "C-x f") 'find-file)
     map)
   "my-keys-minor-mode keymap.")
@@ -482,7 +485,13 @@ There are two things you can do about this warning:
 (global-set-key (kbd "M-z") #'zzz-to-char)
 
 ;; rust
+(add-hook 'rust-mode-hook #'yas-minor-mode)
 (add-hook 'rust-mode-hook #'lsp)
+(add-hook 'rust-mode-hook #'flycheck-mode)
+(with-eval-after-load 'rust-mode
+  (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
 (add-hook 'rust-mode-hook
 	  (lambda () (setq indent-tabs-mode nil)))
+(add-hook 'rust-mode-hook 
+(lambda ()  (define-key rust-mode-map (kbd "M-?") 'lsp-find-references)))
 (setq rust-format-on-save t)
