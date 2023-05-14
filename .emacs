@@ -1,3 +1,5 @@
+;; Run m-x package-install-selected-packages to install 
+
 ;; comment commands
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
@@ -56,7 +58,8 @@ There are two things you can do about this warning:
 ;; tab spaces war
 (setq-default tab-width 4)
 
-
+;; terminal doesnt ring bell 
+(setq visible-bell t)
 
 ;; enabling line numbers by defaut
 
