@@ -104,7 +104,7 @@ There are two things you can do about this warning:
  '(make-backup-files nil)
  '(mode-require-final-newline nil)
  '(package-selected-packages
-   '(flycheck-rust helm-projectile projectile flycheck-irony company-irony irony no-littering xclip rust-mode sphinx-mode company-terraform terraform-mode ws-butler cmake-ide zzz-to-char tide rainbow-delimiters flycheck-rtags rtags flycheck-clangcheck flycheck lua-mode helm-ag nix-mode lsp-mode protobuf-mode gnu-elpa-keyring-update ein python-black blacken sml-mode clang-format json-reformatter-jq json-reformat mmm-mode multiple-cursors hack-time-mode company php-mode golden-ratio-scroll-screen nlinum go-mode yaml-mode web-mode python-django yasnippet))
+   '(flycheck-rust helm-projectile projectile flycheck-irony company-irony irony no-littering xclip rust-mode sphinx-mode company-terraform terraform-mode ws-butler cmake-ide zzz-to-char tide rainbow-delimiters flycheck-rtags rtags flycheck-clangcheck flycheck lua-mode helm-ag nix-mode lsp-mode protobuf-mode gnu-elpa-keyring-update ein python-black blacken sml-mode clang-format json-reformatter-jq json-reformat mmm-mode multiple-cursors hack-time-mode company php-mode golden-ratio-scroll-screen nlinum go-mode yaml-mode web-mode python-django yasnippet)) 
  '(prettier-js-args '("--tab-width" "4" "--print-width" "100" "--semi" "false"))
  '(prettier-js-command "~/.npm-packages/bin/prettier")
  '(tide-completion-fuzzy t)
@@ -218,6 +218,9 @@ There are two things you can do about this warning:
 (defvar my-keys-minor-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "M-q") 'company-complete)
+    (define-key map (kbd "C-j") nil)
+    (define-key map (kbd "C-j w") 'avy-goto-word-1)
+    (define-key map (kbd "C-j c") 'avy-goto-char-in-line)
     (define-key map (kbd "C-x C-f") 'helm-projectile)
     ;;(define-key map (kbd "C-x C-f") 'helm-locate)
     (define-key map (kbd "C-x c b") 'helm-bookmarks)
