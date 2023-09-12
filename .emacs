@@ -61,6 +61,7 @@ There are two things you can do about this warning:
 ;; terminal doesnt ring bell 
 (setq visible-bell t)
 
+
 ;; enabling line numbers by defaut
 
 ;; Preset `nlinum-format' for minimum width.
@@ -102,15 +103,18 @@ There are two things you can do about this warning:
  '(indent-tabs-mode nil)
  '(irony-server-install-prefix "/run/current-system/sw")
  '(make-backup-files nil)
+ '(menu-bar-mode nil)
  '(mode-require-final-newline nil)
  '(package-selected-packages
-   '(flycheck-rust helm-projectile projectile flycheck-irony company-irony irony no-littering xclip rust-mode sphinx-mode company-terraform terraform-mode ws-butler cmake-ide zzz-to-char tide rainbow-delimiters flycheck-rtags rtags flycheck-clangcheck flycheck lua-mode helm-ag nix-mode lsp-mode protobuf-mode gnu-elpa-keyring-update ein python-black blacken sml-mode clang-format json-reformatter-jq json-reformat mmm-mode multiple-cursors hack-time-mode company php-mode golden-ratio-scroll-screen nlinum go-mode yaml-mode web-mode python-django yasnippet)) 
- '(prettier-js-args '("--tab-width" "4" "--print-width" "100" "--semi" "false"))
- '(prettier-js-command "~/.npm-packages/bin/prettier")
+   '(lsp-tailwindcss flycheck-rust helm-projectile projectile flycheck-irony company-irony irony no-littering xclip rust-mode sphinx-mode company-terraform terraform-mode ws-butler cmake-ide zzz-to-char tide rainbow-delimiters flycheck-rtags rtags flycheck-clangcheck flycheck lua-mode helm-ag nix-mode lsp-mode protobuf-mode gnu-elpa-keyring-update ein python-black blacken sml-mode clang-format json-reformatter-jq json-reformat mmm-mode multiple-cursors hack-time-mode company php-mode golden-ratio-scroll-screen nlinum go-mode yaml-mode web-mode python-django yasnippet))
+ ;; '(prettier-js-args '("--tab-width" "4" "--print-width" "100" "--semi" "false"))  ;; antithesis
+ '(prettier-js-args '("--config ./.prettierrc.js"))
  '(tide-completion-fuzzy t)
  '(tide-server-max-response-length 204800)
- '(tide-tscompiler-executable "~/src/star/notebook/node_modules/typescript/bin/tsc")
- '(tide-tsserver-executable "~/src/star/notebook/node_modules/typescript/bin/tsserver")
+ ;;'(tide-tscompiler-executable "~/src/star/notebook/node_modules/typescript/bin/tsc");; antithesis
+ ;;(tide-tsserver-executable "~/src/star/notebook/node_modules/typescript/bin/tsserver");; antithesis
+ '(tide-tscompiler-executable "./node_modules/typescript/bin/tsc")
+ '(tide-tsserver-executable "./node_modules/typescript/bin/tsserver")
  '(tide-user-preferences
    '(:includeCompletionsForModuleExports t :includeCompletionsWithInsertText t :allowTextChangesInNewFiles t :generateReturnInDocTemplate t :noErrorTruncation t))
  '(vc-annotate-background-mode nil)
@@ -120,6 +124,10 @@ There are two things you can do about this warning:
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(avy-lead-face ((t (:background "gray18" :foreground "white"))))
+ '(avy-lead-face-0 ((t (:background "gray26" :foreground "white"))))
+ '(avy-lead-face-1 ((t (:background "gray34" :foreground "white"))))
+ '(avy-lead-face-2 ((t (:background "gray34" :foreground "white"))))
  '(diff-added ((t (:inherit diff-changed :extend t :background "#5faf00"))))
  '(ediff-current-diff-C ((t (:extend t :background "#5f0087"))))
  '(ediff-fine-diff-C ((t (:background "#8700af"))))
@@ -219,7 +227,7 @@ There are two things you can do about this warning:
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "M-q") 'company-complete)
     (define-key map (kbd "C-j") nil)
-    (define-key map (kbd "C-j w") 'avy-goto-word-1)
+    (define-key map (kbd "C-j w") 'avy-goto-word-0)
     (define-key map (kbd "C-j c") 'avy-goto-char-in-line)
     (define-key map (kbd "C-x C-f") 'helm-projectile)
     ;;(define-key map (kbd "C-x C-f") 'helm-locate)
@@ -263,7 +271,6 @@ There are two things you can do about this warning:
 (add-hook 'c++-mode-hook 'lsp)
 (add-hook 'nix-mode-hook 'lsp)
 (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
-
 
 ;; cmake
 (require 'rtags)
@@ -454,15 +461,30 @@ There are two things you can do about this warning:
 (eval-after-load "tide"
   '(define-key tide-mode-map (kbd "C-x x s") 'tide-restart-server))
 
-
+;; Tide mode vs lsp mode for tsx
+;; (add-hook 'web-mode-hook
+;;           (lambda ()
+;;             (when (string-equal "tsx" (file-name-extension buffer-file-name))
+;;               (typescript-mode))))
 (add-hook 'web-mode-hook
           (lambda ()
             (when (string-equal "tsx" (file-name-extension buffer-file-name))
-              (typescript-mode))))
+              (lsp-mode))))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "tsx" (file-name-extension buffer-file-name))
+              (yas-minor-mode))))
+(add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "tsx" (file-name-extension buffer-file-name))
+              (prettier-js-mode))))
+(setq lsp-tailwindcss-add-on-mode t)
+
 (add-hook 'web-mode-hook
           (lambda ()
             (when (string-equal "ts" (file-name-extension buffer-file-name))
               (typescript-mode))))
+
 (add-hook 'js2-mode-hook #'setup-tide-mode)
 ;; configure javascript-tide checker to run after your default javascript checker
 (require 'flycheck)
